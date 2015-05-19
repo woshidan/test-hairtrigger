@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519150445) do
+ActiveRecord::Schema.define(version: 20150519160009) do
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -19,11 +19,11 @@ ActiveRecord::Schema.define(version: 20150519150445) do
     t.datetime "updated_at"
   end
 
-  create_trigger("users_after_insert_row_when_select_count_from_users_where_na_tr", :generated => true, :compatibility => 1).
+  create_trigger("users_before_insert_row_when_select_count_from_users_where_n_tr", :generated => true, :compatibility => 1).
       on("users").
-      after(:insert).
+      before(:insert).
       where("(SELECT COUNT(*) FROM users where name = NEW.name) > 0") do
-    "DELETE FROM users WHERE id = NEW.id;"
+    "SET NEW.name = CONCAT(NEW.name, (SELECT COUNT(*) FROM users where name = NEW.name) + 1);"
   end
 
 end

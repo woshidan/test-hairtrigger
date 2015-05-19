@@ -6,8 +6,8 @@
 #
 one:
   id: 1
-  name: 'test1'
-# two:
-#   id: 2
-#   name: 'test1'
+  name: 'test'
+two:
+  id: 2
+  name: 'test'
 # fixed data can be not unique
