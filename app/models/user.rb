@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  trigger.after(:insert) do
-    "same_name_user_count = COUNT(*) FROM users where users.name = NEW.name; IF same_name_user_count > 0 THEN DELETE FROM users WHERE users.id = NEW.id; END IF;"
+  trigger.after(:insert).where('(SELECT COUNT(*) FROM users where name = NEW.name) > 0') do
+    "DELETE FROM users WHERE id = NEW.id;"
   end
 end

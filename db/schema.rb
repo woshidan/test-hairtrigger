@@ -11,12 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519142502) do
+ActiveRecord::Schema.define(version: 20150519150445) do
 
   create_table "users", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_trigger("users_after_insert_row_when_select_count_from_users_where_na_tr", :generated => true, :compatibility => 1).
+      on("users").
+      after(:insert).
+      where("(SELECT COUNT(*) FROM users where name = NEW.name) > 0") do
+    "DELETE FROM users WHERE id = NEW.id;"
   end
 
 end
